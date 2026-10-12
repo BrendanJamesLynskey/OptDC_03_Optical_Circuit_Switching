@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Optical Technology for Data Centres 03 — Optical Circuit Switching</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&family=Geist+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #1c1815;
+            --bg-card: #231e1a;
+            --bg-code: #2b2520;
+            --text-primary: #efe8dc;
+            --text-secondary: #a2978b;
+            --accent: #aabd59;
+            --accent-dim: #aabd5944;
+            --accent-glow: #aabd5933;
+            --border: #3a322b;
+            --font-display: 'Bricolage Grotesque', sans-serif;
+            --font-mono: 'Geist Mono', 'Geist Mono', monospace;
+            --font-body: 'Instrument Sans', sans-serif;
+            --max-width: 900px;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 17px;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* ── Header ── */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .hero > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .series-label {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--accent);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 .accent {
+            color: var(--accent);
+        }
+
+        .hero .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin-bottom: 2rem;
+        }
+
+        /* ── Tag Pills ── */
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .tag {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            background: var(--accent-dim);
+            white-space: nowrap;
+        }
+
+        /* ── Pipeline Flow Bar ── */
+        .pipeline {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+            margin-bottom: 1rem;
+            max-width: var(--max-width);
+        }
+
+        .pipeline-step {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            padding: 0.3rem 0.7rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        .pipeline-arrow {
+            color: var(--accent);
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        /* ── Slides ── */
+        .slide {
+            min-height: 100vh;
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 4rem 1.5rem;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .slide-number {
+            font-family: var(--font-display);
+            font-size: 5rem;
+            font-weight: 700;
+            color: var(--accent-dim);
+            position: absolute;
+            top: 2rem;
+            right: 1.5rem;
+            line-height: 1;
+            user-select: none;
+        }
+
+        .slide h2 {
+            font-family: var(--font-display);
+            font-size: 1.9rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            line-height: 1.25;
+        }
+
+        .slide h3 {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .slide p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .slide p strong {
+            color: var(--text-primary);
+        }
+
+        .slide ul, .slide ol {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+            color: var(--text-secondary);
+        }
+
+        .slide li {
+            margin-bottom: 0.4rem;
+        }
+
+        .slide li strong {
+            color: var(--text-primary);
+        }
+
+        /* ── Code Blocks ── */
+        .code-block {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin: 1.25rem 0;
+            overflow: hidden;
+        }
+
+        .code-header {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--accent);
+            background: rgba(170,189,89,0.08);
+            padding: 0.4rem 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .code-block pre {
+            margin: 0;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+
+        .code-block code {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: #dad1c5;
+        }
+
+        /* Syntax highlighting (manual) */
+        .kw { color: #de805a; }
+        .fn { color: #d7bbdf; }
+        .str { color: #bcdbd4; }
+        .cm { color: #a2978b; font-style: italic; }
+        .num { color: #97cdc6; }
+        .type { color: #e3b174; }
+        .dir { color: #de805a; }
+        .mac { color: #e3b174; }
+
+        /* ── Tables ── */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 1.25rem 0;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background: var(--bg-code);
+            color: var(--accent);
+            font-weight: 600;
+            text-align: left;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+            font-family: var(--font-display);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 0.6rem 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:nth-child(even) td {
+            background: rgba(35,30,26,0.5);
+        }
+
+        /* ── Diagrams ── */
+        .diagram-flow {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+
+        .diagram-box {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-primary);
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .diagram-box.accent {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: rgba(170,189,89,0.08);
+        }
+
+        .diagram-box.dim {
+            color: var(--text-secondary);
+            border-color: var(--border);
+        }
+
+        .diagram-arrow {
+            color: var(--accent);
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        /* Vertical flow diagrams */
+        .diagram-vertical {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.3rem;
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+
+        .diagram-vertical .diagram-arrow {
+            font-size: 1.1rem;
+        }
+
+        /* Nested hierarchy diagram */
+        .hierarchy {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+
+        .hierarchy-level {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .hierarchy-label {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            min-width: 80px;
+            text-align: right;
+        }
+
+        .hierarchy-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+        }
+
+        .hierarchy-item {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .hierarchy-item.accent {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: rgba(170,189,89,0.08);
+        }
+
+        /* Grid diagram */
+        .diagram-grid {
+            display: grid;
+            gap: 0.75rem;
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+
+        .diagram-grid.cols-2 {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .diagram-grid.cols-3 {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        .diagram-panel {
+            padding: 1rem;
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+        }
+
+        .diagram-panel.accent-border {
+            border-left: 3px solid var(--accent);
+        }
+
+        .diagram-panel h4 {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .diagram-panel p, .diagram-panel ul {
+            font-size: 0.85rem;
+        }
+
+        /* ── Callout Boxes ── */
+        .callout {
+            background: var(--bg-card);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 8px 8px 0;
+            padding: 1rem 1.25rem;
+            margin: 1.25rem 0;
+        }
+
+        .callout p {
+            margin-bottom: 0;
+        }
+
+        .callout .callout-label {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.3rem;
+        }
+
+        /* ── Tier Visual ── */
+        .tier-visual {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+
+        .tier-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .tier-label {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            min-width: 90px;
+            text-align: right;
+        }
+
+        .tier-fill {
+            height: 32px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            padding: 0 0.75rem;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            white-space: nowrap;
+            transition: width 0.6s ease;
+        }
+
+        .tier-cost {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            min-width: 70px;
+        }
+
+        /* ── Contents list ── */
+        .contents-list {
+            list-style: none;
+            padding-left: 0;
+            counter-reset: contents;
+        }
+
+        .contents-list li {
+            counter-increment: contents;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .contents-list li:last-child {
+            border-bottom: none;
+        }
+
+        .contents-list li::before {
+            content: counter(contents, decimal-leading-zero);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--accent);
+            min-width: 2rem;
+        }
+
+        .contents-list a {
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .contents-list a:hover {
+            color: var(--accent);
+        }
+
+        /* ── Footer ── */
+        .footer {
+            text-align: center;
+            padding: 3rem 1.5rem;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border);
+            max-width: var(--max-width);
+            margin: 0 auto;
+        }
+
+        .footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 640px) {
+            .slide {
+                padding: 3rem 1rem;
+                min-height: auto;
+            }
+
+            .slide-number {
+                font-size: 3rem;
+                top: 1.5rem;
+                right: 1rem;
+            }
+
+            .slide h2 {
+                font-size: 1.5rem;
+            }
+
+            .diagram-grid.cols-2,
+            .diagram-grid.cols-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .pipeline {
+                gap: 0.15rem;
+            }
+
+            .pipeline-step {
+                font-size: 0.6rem;
+                padding: 0.2rem 0.4rem;
+            }
+
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            table {
+                font-size: 0.78rem;
+            }
+
+            .tier-label {
+                min-width: 60px;
+                font-size: 0.65rem;
+            }
+
+            .tier-fill {
+                font-size: 0.6rem;
+                height: 26px;
+            }
+        }
+
+        /* ── Interactive controls (added for Local LLM series) ── */
+        .control-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin: 1.25rem 0;
+        }
+        .control-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+        .control-row label {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            min-width: 180px;
+        }
+        .control-row input[type="range"] {
+            flex: 1;
+            min-width: 160px;
+            accent-color: var(--accent);
+        }
+        .control-row input[type="number"],
+        .control-row select {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            border-radius: 4px;
+            padding: 0.3rem 0.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+        }
+        .control-row .val {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--accent);
+            min-width: 80px;
+            text-align: right;
+        }
+        .btn {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            padding: 0.4rem 0.9rem;
+            background: var(--accent-dim);
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+        .btn:hover { background: rgba(170,189,89,0.2); }
+        .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .btn.secondary {
+            background: var(--bg-code);
+            color: var(--text-secondary);
+            border-color: var(--border);
+        }
+        .result-box {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--accent);
+            border-radius: 4px;
+            padding: 0.75rem 1rem;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            margin-top: 0.75rem;
+        }
+        .result-box .line-label { color: var(--text-secondary); }
+        .result-box .line-val   { color: var(--accent); font-weight: 600; }
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+        .metric {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.6rem 0.8rem;
+            text-align: center;
+        }
+        .metric .metric-label {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+        .metric .metric-value {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            color: var(--accent);
+            font-weight: 600;
+            margin-top: 0.2rem;
+        }
+
+        /* Canvas / SVG containers */
+        .canvas-wrap {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1.25rem 0;
+            overflow-x: auto;
+        }
+        .canvas-wrap canvas,
+        .canvas-wrap svg {
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+        }
+
+        /* Small inline badge */
+        .badge {
+            display: inline-block;
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            padding: 0.1rem 0.45rem;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            vertical-align: middle;
+            margin-left: 0.3rem;
+        }
+        .badge.ok    { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+        .badge.warn  { border-color: #e3b174; color: #e3b174; background: rgba(227,177,116,0.08); }
+        .badge.bad   { border-color: #de805a; color: #de805a; background: rgba(222,128,90,0.08); }
+
+
+        /* ── LLM Inference Simulators additions ── */
+        .canvas-wrap canvas { image-rendering: auto; display: block; width: 100%; height: auto; }
+        .canvas-wrap svg { max-width: 100%; height: auto; }
+        .ladder { display: grid; gap: 0.4rem; margin: 1.25rem 0; }
+        .ladder-row {
+            display: grid; grid-template-columns: 11rem 1fr 7.5rem; gap: 0.75rem; align-items: center;
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px;
+            padding: 0.55rem 0.85rem; font-size: 0.88rem;
+        }
+        .ladder-row .rung { font-family: var(--font-display); font-weight: 600; color: var(--accent); }
+        .ladder-row .speed { font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-secondary); text-align: right; }
+        .res-list { list-style: none; padding: 0; margin: 0.75rem 0; }
+        .res-list li { padding: 0.6rem 0; border-bottom: 1px solid var(--border); font-size: 0.92rem; }
+        .res-list li:last-child { border-bottom: none; }
+        .res-list .what { color: var(--text-secondary); display: block; font-size: 0.86rem; margin-top: 0.15rem; }
+        .res-list a { color: var(--accent); text-decoration: none; }
+        .res-list a:hover { text-decoration: underline; }
+        .qa { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; margin: 0.6rem 0; padding: 0.2rem 1rem; }
+        .qa summary { cursor: pointer; padding: 0.6rem 0; font-weight: 600; }
+        .qa p, .qa ul { margin-bottom: 0.75rem; font-size: 0.92rem; }
+        .sim-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 0.4rem 1.25rem; }
+        .chart-pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; }
+        .chart-title { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.3rem; }
+        .slide a { color: var(--accent); }
+        @media (max-width: 640px) {
+            .ladder-row { grid-template-columns: 1fr; gap: 0.2rem; }
+            .ladder-row .speed { text-align: left; }
+        }
+        .concepts { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 6px; padding: 0.75rem 1rem; margin-top: 1.25rem; font-size: 0.88rem; }
+        .concepts p { margin: 0 0 0.4rem; color: var(--text-secondary); }
+        .concepts .chips { display: flex; flex-wrap: wrap; gap: 0.35rem 0.5rem; }
+        .concepts .chips a { border: 1px solid var(--border); border-radius: 999px; padding: 0.1rem 0.6rem; text-decoration: none; font-size: 0.82rem; }
+        .concepts .chips a:hover { border-color: var(--accent); }
+        .hero { overflow: hidden; }   /* the 600px glow must not widen the page on phones */
+        .chart-pair > *, .diagram-grid > *, .sim-grid > * { min-width: 0; }   /* let wide code scroll inside its column */
+        .slide p code, .slide li code, .slide td code { overflow-wrap: anywhere; }
+        @media (max-width: 640px) { .diagram-box { white-space: normal; max-width: 100%; } }   /* long boxes must wrap on phones */
+        /* FOptInf: keep long titles clear of the slide number on phones */
+        @media (max-width: 640px) { .slide h2 { padding-right: 3.6rem; } }
+        .sim-grid select, .sim-grid input[type="range"] { max-width: 100%; min-width: 0; }   /* long option labels must not spill into the next column */
+    </style>
+</head>
+<body>
+
+<header class="hero">
+    <div class="series-label">Optical Technology for Data Centres &mdash; Presentation 03</div>
+    <h1><span class="accent">Optical Circuit</span> Switching</h1>
+    <p class="subtitle">Switching light without converting it: packet against circuit switching, MEMS, silicon-photonic and wavelength-routed switches, Google's optical spine and TPU v4 interconnect, reconfiguration time against traffic, and what an optical switch costs in the link budget.</p>
+
+    <div class="tags">
+        <span class="tag">OCS</span>
+        <span class="tag">3D MEMS</span>
+        <span class="tag">Topology engineering</span>
+        <span class="tag">TPU v4</span>
+        <span class="tag">Reconfiguration</span>
+        <span class="tag">Insertion loss</span>
+    </div>
+
+    <div class="pipeline">
+        <span class="pipeline-step">Transceiver</span>
+        <span class="pipeline-arrow">&rarr;</span>
+        <span class="pipeline-step">Fibre</span>
+        <span class="pipeline-arrow">&rarr;</span>
+        <span class="pipeline-step">Mirror</span>
+        <span class="pipeline-arrow">&rarr;</span>
+        <span class="pipeline-step">Mirror</span>
+        <span class="pipeline-arrow">&rarr;</span>
+        <span class="pipeline-step">Fibre</span>
+        <span class="pipeline-arrow">&rarr;</span>
+        <span class="pipeline-step">Transceiver</span>
+    </div>
+</header>
+
+<section class="slide" id="slide-00">
+    <div class="slide-number">00</div>
+    <h2>Topics We'll Cover</h2>
+    <ul class="contents-list">
+        <li><a href="#slide-01">Packet Switching and Circuit Switching</a></li>
+        <li><a href="#slide-02">How a MEMS Optical Circuit Switch Works</a></li>
+        <li><a href="#slide-03">The Technologies Compared</a></li>
+        <li><a href="#slide-04">Google's Optical Spine</a></li>
+        <li><a href="#slide-05">Lightwave Fabrics: Circulators and WDM</a></li>
+        <li><a href="#slide-06">TPU v4: an Optically Reconfigurable Supercomputer</a></li>
+        <li><a href="#slide-07">Interactive: Reconfiguration and Spine Power</a></li>
+        <li><a href="#slide-08">Reconfiguration Time Against Traffic</a></li>
+        <li><a href="#slide-09">An Optical Switch in the Link Budget</a></li>
+        <li><a href="#slide-10">What Circuit Switching Cannot Do</a></li>
+        <li><a href="#slide-11">What to Take Away</a></li>
+    </ul>
+    <div class="concepts">
+        <p><strong>Concepts used here, and where they are explained.</strong> Each links to a glossary entry: this <a href="https://brendanjameslynskey.github.io/Optical_Hub_Data_Centres/#glossary">series glossary</a>, the <a href="https://brendanjameslynskey.github.io/Optical_Hub_Silicon_Photonics/#glossary">Silicon Photonics Fundamentals glossary</a> for device physics, or the glossaries of other sister series for concepts they already explain.</p>
+        <div class="chips"><a href="https://brendanjameslynskey.github.io/Optical_Hub_Data_Centres/#g-ocs" title="A switch that steers light from input to output fibres without detecting it: no transceivers inside, under 1 W per port for Google&#x27;s Palomar, and agnostic to line rate. It sets circuits, not packets, and reconfigures in nanoseconds to milliseconds depending on technology.">Optical circuit switch (OCS)</a><a href="https://brendanjameslynskey.github.io/Optical_Hub_Data_Centres/#g-mems" title="Two arrays of two-axis micro-mirrors that aim each input beam at any output fibre. Hundreds of ports at under 2 dB typical loss, switching in milliseconds: Google&#x27;s Palomar is 136 × 136.">3D MEMS optical switch</a><a href="https://brendanjameslynskey.github.io/Optical_Hub_Data_Centres/#g-reconfig" title="How long a circuit switch takes to change its connections, against how long a configuration is used: the fabric carries traffic for 1 − treconfigure/tperiod of the time. Milliseconds suit per-job topologies; per-packet switching needs nanoseconds.">Reconfiguration time and duty cycle</a><a href="https://brendanjameslynskey.github.io/Optical_Hub_Data_Centres/#g-topoeng" title="Wiring aggregation blocks to each other through an OCS layer instead of through a packet spine, and choosing that wiring to match the traffic matrix. Google reports 30% lower capital cost and 41% lower power for its Jupiter fabric.">Direct connect and topology engineering</a><a href="https://brendanjameslynskey.github.io/Optical_Hub_Data_Centres/#g-circulator" title="A non-reciprocal device that lets one fibre carry both directions of a link, halving OCS ports and fibres; it makes the switch&#x27;s return loss matter, since reflections reach the same port&#x27;s receiver.">Optical circulator</a><a href="https://brendanjameslynskey.github.io/Optical_Hub_Data_Centres/#g-tpuv4" title="4,096 TPU v4 chips in 64-chip cubes joined through 3D MEMS OCSes into tori of the shape each job asks for, routing around failed racks; the OCSes are under 5% of system cost and 3% of power.">Optically reconfigurable torus (TPU v4)</a><a href="https://brendanjameslynskey.github.io/Optical_Hub_Data_Centres/#g-fastocs" title="Research designs that switch light far faster than MEMS: RotorNet cycles rotor switches through fixed matchings with no central scheduler; Sirius uses tunable lasers and passive gratings to reconfigure end to end in 3.84 ns.">Fast optical switching (RotorNet, Sirius)</a><a href="https://brendanjameslynskey.github.io/Optical_Hub_Data_Centres/#g-ocsloss" title="The loss every link pays to cross an optical switch: typically under 2 dB for MEMS switches, several dB for integrated silicon switches. With no regeneration inside, it comes straight out of the transceivers&#x27; margin.">OCS insertion loss in the link budget</a><a href="https://brendanjameslynskey.github.io/Optical_Hub_Silicon_Photonics/#g-linkbudget" title="The bookkeeping from laser to detector: laser power minus coupling, modulator, multiplexer, fibre and connector losses and penalties must exceed the receiver&#x27;s sensitivity plus a margin. The required laser power follows from the losses, and the electrical power from the wall-plug efficiency.">Optical link budget</a><a href="https://brendanjameslynskey.github.io/Optical_Hub_Silicon_Photonics/#g-wdm" title="Several channels on one fibre, each on its own wavelength, combined by a multiplexer and separated by a demultiplexer. It multiplies bandwidth per fibre without faster electronics.">Wavelength-division multiplexing (WDM)</a><a href="https://brendanjameslynskey.github.io/LLM_Hub_Compute_in_Transit/#g-alltoall" title="Expert parallelism sends each token&#x27;s activation to the device holding its expert and back, every MoE layer.">MoE all-to-all</a></div>
+    </div>
+</section>
+
+<section class="slide" id="slide-01">
+    <div class="slide-number">01</div>
+    <h2>Packet Switching and Circuit Switching</h2>
+    <div class="diagram-grid cols-2">
+        <div class="diagram-panel accent-border">
+            <h4>Electrical packet switch (EPS)</h4>
+            <ul>
+                <li>Every port converts light to electrons and back: a transceiver at each end of every link (<a href="https://brendanjameslynskey.github.io/OptDC_01_Pluggables_to_LPO/">deck 01</a>).</li>
+                <li>Decides per packet, buffers, and serves any traffic pattern.</li>
+                <li>Tied to a line rate: a faster generation means new switches and new optics.</li>
+            </ul>
+        </div>
+        <div class="diagram-panel accent-border">
+            <h4>Optical circuit switch (OCS)</h4>
+            <ul>
+                <li>Steers light from an input fibre to an output fibre without detecting it: no transceivers inside, almost no power per port.</li>
+                <li>Agnostic to line rate, modulation and wavelength: the same switch carries the next generation of optics.</li>
+                <li>Sets up circuits, not packets: each input goes to one output until reconfigured, and reconfiguring takes from nanoseconds to tens of milliseconds depending on the technology.</li>
+            </ul>
+        </div>
+    </div>
+    <ul>
+        <li><strong>So an OCS replaces the layer of a network whose connections change slowly</strong>: the spine between aggregation blocks, or the wiring between racks of accelerators. Packet switches stay where traffic must be sorted packet by packet.</li>
+        <li>A survey of the earlier optical data-centre interconnect proposals is Kachris and Tomkos (<a href="https://doi.org/10.1109/SURV.2011.122111.00069">IEEE Commun. Surveys Tuts. 14, 1021, 2012</a>).</li>
+    </ul>
+</section>
+
+<section class="slide" id="slide-02">
+    <div class="slide-number">02</div>
+    <h2>How a MEMS Optical Circuit Switch Works</h2>
+    <div class="canvas-wrap">
+        <svg viewBox="0 0 760 220" width="760" height="220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A 3D MEMS optical circuit switch: an input fibre collimator array sends beams to a first array of tilting micro-mirrors, which aim each beam at a chosen mirror in a second array, which directs it into the chosen output fibre">
+            <style>
+                .fa { fill: rgba(227,177,116,0.18); stroke: #e3b174; }
+                .mm { fill: rgba(151,205,198,0.25); stroke: #97cdc6; }
+                .bm { stroke: #aabd59; stroke-width: 1.8; fill: none; }
+                .bm2 { stroke: #de805a; stroke-width: 1.8; fill: none; stroke-dasharray: 5 3; }
+                .t  { fill: #efe8dc; font-family: 'Geist Mono', monospace; font-size: 11px; }
+                .d  { fill: #a2978b; font-family: 'Geist Mono', monospace; font-size: 10px; }
+            </style>
+            <rect x="30" y="40" width="60" height="140" class="fa"/><text x="20" y="200" class="t">input fibres</text>
+            <g class="mm"><rect x="250" y="30" width="14" height="22" transform="rotate(20 257 41)"/><rect x="250" y="80" width="14" height="22" transform="rotate(20 257 91)"/><rect x="250" y="130" width="14" height="22" transform="rotate(20 257 141)"/><rect x="250" y="170" width="14" height="22" transform="rotate(20 257 181)"/></g>
+            <text x="210" y="215" class="t">MEMS mirror array 1</text>
+            <g class="mm"><rect x="480" y="30" width="14" height="22" transform="rotate(-20 487 41)"/><rect x="480" y="80" width="14" height="22" transform="rotate(-20 487 91)"/><rect x="480" y="130" width="14" height="22" transform="rotate(-20 487 141)"/><rect x="480" y="170" width="14" height="22" transform="rotate(-20 487 181)"/></g>
+            <text x="440" y="215" class="t">MEMS mirror array 2</text>
+            <rect x="660" y="40" width="60" height="140" class="fa"/><text x="645" y="200" class="t">output fibres</text>
+            <path class="bm" d="M90 91 L257 91 L487 181 L660 181"/>
+            <path class="bm2" d="M90 141 L257 141 L487 41 L660 41"/>
+            <text x="300" y="70" class="d">each mirror tilts in two axes</text>
+            <text x="300" y="84" class="d">to aim at any mirror opposite</text>
+        </svg>
+    </div>
+    <ul>
+        <li><strong>Free-space beam steering:</strong> each input fibre's beam hits its own micro-mirror, which tilts in two axes to aim it at the mirror of the chosen output, which aims it into that fibre. Any input can reach any output; switching is the time for the mirrors to move and settle.</li>
+        <li><strong>Google's Palomar</strong> is such a switch, with 136 &times; 136 ports; its MEMS package has 176 mirrors of which 40 are disabled for yield, and the whole switch draws at most 108 W (Liu et al., &ldquo;Lightwave Fabrics&rdquo;, <a href="https://doi.org/10.1145/3603269.3604836">ACM SIGCOMM 2023</a>). Its insertion loss is typically under 2 dB and it switches in milliseconds (Urata et al., &ldquo;Mission Apollo&rdquo;, <a href="https://arxiv.org/abs/2208.10041">arXiv:2208.10041</a>).</li>
+        <li><strong>108 W across 136 ports is under 1 W per port</strong>, against a packet switch port plus its transceiver at the other end of a fibre (<a href="#slide-07">slide 07</a>).</li>
+    </ul>
+</section>
+
+<section class="slide" id="slide-03">
+    <div class="slide-number">03</div>
+    <h2>The Technologies Compared</h2>
+    <div class="table-wrap">
+    <table>
+        <tr><th>Technology</th><th>Example</th><th>Ports</th><th>Reported loss and speed</th><th>Source</th></tr>
+        <tr><td>3D MEMS mirrors</td><td>Google Palomar</td><td>136 &times; 136</td><td>Typically under 2 dB; milliseconds</td><td>Liu et al. 2023; Urata et al. 2022 (<a href="#slide-02">slide 02</a>)</td></tr>
+        <tr><td>3D MEMS mirrors</td><td>Calient S320</td><td>320 ports, 7 RU</td><td>1.8 dB typical; 45 W typical; under 50 ms per port</td><td>Calient (<a href="https://www.calient.net/wp-content/uploads/2022/06/Datasheet_Calients-Optical-Circuit-Switches.pdf">datasheet</a>; vendor)</td></tr>
+        <tr><td>MEMS</td><td>Lumentum R300 (2025)</td><td>300 &times; 300</td><td>Sampling with hyperscalers, general availability planned for the second half of 2025; the vendor claims more than 65% lower network power</td><td>Lumentum (<a href="https://www.businesswire.com/news/home/20250326837266/en">press release</a>; vendor)</td></tr>
+        <tr><td>Beam steering</td><td>HUBER+SUHNER POLATIS 576</td><td>576 &times; 576, 8 RU</td><td>Not stated in the material found</td><td>HUBER+SUHNER (<a href="https://hubersuhner.com/en/shop/product/other-systems/optical-switches/rack-mount-circuit-switches/85210593/polatis-576-optical-circuit-switch">product page</a>; vendor)</td></tr>
+        <tr><td>Digital liquid crystal</td><td>Coherent (OFC 2024)</td><td>300 &times; 300</td><td>Drive voltage below 10 V; loss and speed not stated in the release</td><td>Coherent (<a href="https://www.coherent.com/news/press-releases/optical-circuit-switch-for-data-centers-live-demo-at-ofc-2024-based-on-ultrareliable-dlx-technology">press release</a>; vendor)</td></tr>
+        <tr><td>Silicon photonic MEMS</td><td>Seok et al., wafer-scale</td><td>240 &times; 240 (3 &times; 3 stitched 80 &times; 80 blocks, 4 &times; 4 cm)</td><td>Up to 9.8 dB on chip; switching below 400 ns; 70 dB on/off ratio</td><td><a href="https://doi.org/10.1364/OPTICA.6.000490">Optica 6, 490, 2019</a></td></tr>
+        <tr><td>Tunable lasers and passive gratings</td><td>Sirius (Microsoft Research)</td><td>Wavelength-routed</td><td>Lasers tune in under 912 ps; 3.84 ns end-to-end reconfiguration on 50 Gb/s channels</td><td>Ballani et al. (<a href="https://doi.org/10.1145/3387514.3406221">ACM SIGCOMM 2020</a>)</td></tr>
+        <tr><td>Robotic patch panel</td><td>Telescent G5</td><td>16,128 fibres in a rack</td><td>Reconfigures by physically moving fibres</td><td>Telescent (<a href="https://www.businesswire.com/news/home/20250327302187/en">press release</a>; vendor)</td></tr>
+    </table>
+    </div>
+    <ul>
+        <li><strong>The trade is speed against loss and scale:</strong> free-space MEMS gives hundreds of low-loss ports but switches in milliseconds; integrated silicon switches reach hundreds of nanoseconds at several dB of loss; wavelength routing switches in nanoseconds but needs fast tunable lasers at every endpoint.</li>
+    </ul>
+</section>
+
+<section class="slide" id="slide-04">
+    <div class="slide-number">04</div>
+    <h2>Google's Optical Spine</h2>
+    <div class="canvas-wrap">
+        <svg viewBox="0 0 760 200" width="760" height="200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Left: a Clos fabric with aggregation blocks connected through a layer of spine packet switches. Right: the same aggregation blocks connected directly to each other through a layer of optical circuit switches">
+            <style>
+                .ab { fill: rgba(151,205,198,0.25); stroke: #97cdc6; }
+                .sp { fill: rgba(222,128,90,0.25); stroke: #de805a; }
+                .oc { fill: rgba(227,177,116,0.25); stroke: #e3b174; }
+                .ln { stroke: #a2978b; stroke-width: 1; }
+                .t  { fill: #efe8dc; font-family: 'Geist Mono', monospace; font-size: 11px; }
+                .d  { fill: #a2978b; font-family: 'Geist Mono', monospace; font-size: 10px; }
+            </style>
+            <text x="20" y="18" class="t">Clos with a packet spine</text>
+            <rect x="40" y="30" width="60" height="25" class="sp"/><rect x="140" y="30" width="60" height="25" class="sp"/><rect x="240" y="30" width="60" height="25" class="sp"/>
+            <rect x="20" y="140" width="60" height="30" class="ab"/><rect x="110" y="140" width="60" height="30" class="ab"/><rect x="200" y="140" width="60" height="30" class="ab"/><rect x="290" y="140" width="60" height="30" class="ab"/>
+            <g class="ln"><line x1="50" y1="140" x2="70" y2="55"/><line x1="50" y1="140" x2="170" y2="55"/><line x1="50" y1="140" x2="270" y2="55"/><line x1="140" y1="140" x2="70" y2="55"/><line x1="140" y1="140" x2="170" y2="55"/><line x1="140" y1="140" x2="270" y2="55"/><line x1="230" y1="140" x2="70" y2="55"/><line x1="230" y1="140" x2="170" y2="55"/><line x1="230" y1="140" x2="270" y2="55"/><line x1="320" y1="140" x2="70" y2="55"/><line x1="320" y1="140" x2="170" y2="55"/><line x1="320" y1="140" x2="270" y2="55"/></g>
+            <text x="20" y="190" class="d">aggregation blocks</text><text x="310" y="45" class="d">spine</text>
+            <text x="420" y="18" class="t">direct connect through OCS</text>
+            <rect x="480" y="75" width="200" height="30" class="oc"/><text x="530" y="95" class="t">OCS layer</text>
+            <rect x="420" y="140" width="60" height="30" class="ab"/><rect x="510" y="140" width="60" height="30" class="ab"/><rect x="600" y="140" width="60" height="30" class="ab"/><rect x="690" y="140" width="60" height="30" class="ab"/>
+            <g class="ln"><line x1="450" y1="140" x2="520" y2="105"/><line x1="540" y1="140" x2="560" y2="105"/><line x1="630" y1="140" x2="610" y2="105"/><line x1="720" y1="140" x2="650" y2="105"/></g>
+            <text x="420" y="190" class="d">blocks wired to each other; OCS sets which</text>
+        </svg>
+    </div>
+    <ul>
+        <li><strong>Jupiter Evolving:</strong> Google moved its data-centre fabric from a Clos with a packet spine to a direct-connect topology among aggregation blocks, through a datacenter interconnection layer of MEMS optical circuit switches that allows dynamic reconfiguration (Poutievski et al., <a href="https://doi.org/10.1145/3544216.3544265">ACM SIGCOMM 2022</a>).</li>
+        <li><strong>Reported results:</strong> 5&times; higher speed and capacity, 30% lower capital cost and 41% lower power; an average block-level path length of 1.4; and 3&times; faster fabric reconfiguration than the earlier patch-panel interconnect.</li>
+        <li><strong>Topology engineering:</strong> because the OCS layer decides which blocks are wired to which, the topology itself is tuned to the measured traffic matrix, alongside traffic engineering of the paths over it. The spine's packet switches, and the transceivers that terminated links on them, are gone.</li>
+        <li><strong>Rate agnosticism pays over time:</strong> blocks of different generations and line rates connect through the same OCS layer, so the fabric is upgraded block by block rather than all at once.</li>
+    </ul>
+</section>
+
+<section class="slide" id="slide-05">
+    <div class="slide-number">05</div>
+    <h2>Lightwave Fabrics: Circulators and WDM</h2>
+    <ul>
+        <li><strong>Circulators halve the switch.</strong> An optical circulator lets one fibre carry both directions of a link, so the OCS needs one port per link instead of two: Liu et al. use circulators &ldquo;to have a bi-directional link, which halves the number of OCS ports and fiber cables&rdquo; (<a href="https://doi.org/10.1145/3603269.3604836">ACM SIGCOMM 2023</a>).</li>
+        <li><strong>Reflections then matter:</strong> on a bidirectional fibre, light reflected back towards the transmitter lands on the receiver of the same port. Apollo specifies the switch's return loss at &minus;38 dB (&minus;46 dB typical) for this reason (<a href="https://arxiv.org/abs/2208.10041">arXiv:2208.10041</a>).</li>
+        <li><strong>WDM transceivers</strong> put several wavelengths on each fibre (four channels, in the snippets of the paper available for this deck), multiplying what each OCS port carries (<a href="https://brendanjameslynskey.github.io/Optical_Hub_Silicon_Photonics/#g-wdm">WDM</a>).</li>
+        <li><strong>The payoff reported for the TPU system</strong>: up to 3&times; better system availability and up to 3.3&times; model-dependent performance improvement over a static fabric, with the optical circuit switching under 6% of total system cost (Liu et al. 2023).</li>
+    </ul>
+</section>
+
+<section class="slide" id="slide-06">
+    <div class="slide-number">06</div>
+    <h2>TPU v4: an Optically Reconfigurable Supercomputer</h2>
+    <p>Jouppi et al. describe a 4,096-chip TPU v4 machine whose chip-to-chip interconnect runs through optical circuit switches (<a href="https://doi.org/10.1145/3579371.3589350">ISCA 2023</a>; <a href="https://arxiv.org/abs/2304.01433">arXiv:2304.01433</a>).</p>
+    <div class="table-wrap">
+    <table>
+        <tr><th>What the paper reports</th><th>Value</th></tr>
+        <tr><td>Building block</td><td>A 4 &times; 4 &times; 4 cube of 64 chips with its 16 CPU hosts, one rack</td></tr>
+        <tr><td>OCSes and their optical components</td><td>Less than 5% of system cost and less than 3% of system power</td></tr>
+        <tr><td>Switch technology</td><td>3D MEMS mirrors that switch in milliseconds</td></tr>
+        <tr><td>Twisted tori (all-to-all throughput against a regular torus)</td><td>1.63&times; for 4 &times; 4 &times; 8 slices, 1.31&times; for 4 &times; 8 &times; 8</td></tr>
+        <tr><td>Availability</td><td>The OCSes let the machine tolerate 1,000 CPU hosts that are each unavailable 0.1&ndash;1.0% of the time; without them, hosts would need 99.9% availability for reasonable goodput, against 99.0&ndash;99.5% with them</td></tr>
+    </table>
+    </div>
+    <ul>
+        <li><strong>Three uses of one switch:</strong> carve the machine into slices of the shape a job needs; route around failed racks without recabling; and choose topologies (twisted tori) that suit the job's communication.</li>
+        <li><strong>Milliseconds is fast enough</strong> because the topology changes per job or per failure, not per packet. Packets inside a slice travel over fixed circuits between chips.</li>
+        <li>How the torus compares with fat-trees for AI traffic is in <a href="https://brendanjameslynskey.github.io/OptDC_04_AI_Cluster_Networks/#slide-07">deck 04</a>.</li>
+    </ul>
+</section>
+
+<section class="slide" id="slide-07">
+    <div class="slide-number">07</div>
+    <h2>Interactive: Reconfiguration and Spine Power</h2>
+    <p>Two questions about putting an OCS in a network. <strong>How often can it reconfigure?</strong> The fabric carries traffic for the fraction 1 &minus; t<sub>reconfigure</sub>/t<sub>period</sub> of the time. <strong>What does it save?</strong> Replacing a packet spine of N ports removes a switch port and a transceiver per spine port and adds the OCS's own power. Presets set the reconfiguration time from the sources of <a href="#slide-03">slide 03</a> (MEMS: Calient's under 50 ms per port, vendor; silicon photonic MEMS: under 400 ns; tunable lasers: 3.84 ns). The OCS's 0.8 W per port is Palomar's 108 W over 136 ports, and the transceiver's 17 W an 800G datasheet maximum (<a href="https://brendanjameslynskey.github.io/OptDC_01_Pluggables_to_LPO/#slide-05">deck 01</a>). <strong>The packet-switch power per port is illustrative.</strong></p>
+    <div class="control-panel">
+        <div class="sim-grid">
+            <div class="control-row"><label for="oc-tech">Switch technology</label><select id="oc-tech"><option value="mems" selected>3D MEMS (&lt;50 ms)</option><option value="siph">Silicon photonic MEMS (&lt;400 ns)</option><option value="laser">Tunable lasers (3.84 ns)</option></select></div>
+            <div class="control-row"><label for="oc-tr">Reconfiguration time</label><input type="range" id="oc-tr" min="-9" max="0" step="0.01" value="-1.30"><span class="val" id="oc-tr-val">50 ms</span></div>
+            <div class="control-row"><label for="oc-per">Reconfigure every</label><input type="range" id="oc-per" min="-6" max="4" step="0.05" value="1.8"><span class="val" id="oc-per-val">63 s</span></div>
+            <div class="control-row"><label for="oc-n">Spine ports replaced</label><input type="range" id="oc-n" min="64" max="4096" step="64" value="1024"><span class="val" id="oc-n-val">1024</span></div>
+            <div class="control-row"><label for="oc-eps">Packet port (W)</label><input type="range" id="oc-eps" min="1" max="30" step="0.5" value="10"><span class="val" id="oc-eps-val">10.0</span></div>
+            <div class="control-row"><label for="oc-xcvr">Transceiver (W)</label><input type="range" id="oc-xcvr" min="1" max="30" step="0.5" value="17"><span class="val" id="oc-xcvr-val">17.0</span></div>
+            <div class="control-row"><label for="oc-ocs">OCS per port (W)</label><input type="range" id="oc-ocs" min="0.1" max="5" step="0.1" value="0.8"><span class="val" id="oc-ocs-val">0.8</span></div>
+            <div class="control-row"><label for="oc-il">OCS insertion loss (dB)</label><input type="range" id="oc-il" min="0.5" max="10" step="0.1" value="2"><span class="val" id="oc-il-val">2.0</span></div>
+        </div>
+        <div class="metric-grid">
+            <div class="metric"><div class="metric-label">Time carrying traffic</div><div class="metric-value" id="oc-duty">&mdash;</div></div>
+            <div class="metric"><div class="metric-label">Dark time</div><div class="metric-value" id="oc-lost">&mdash;</div></div>
+            <div class="metric"><div class="metric-label">Packet spine power</div><div class="metric-value" id="oc-epsw">&mdash;</div></div>
+            <div class="metric"><div class="metric-label">OCS spine power</div><div class="metric-value" id="oc-ocsw">&mdash;</div></div>
+            <div class="metric"><div class="metric-label">Spine power saved</div><div class="metric-value" id="oc-save">&mdash;</div></div>
+            <div class="metric"><div class="metric-label">Added to each link</div><div class="metric-value" id="oc-budget">&mdash;</div></div>
+        </div>
+        <p id="oc-note" style="font-size:0.85rem; margin-top:0.6rem;"></p>
+    </div>
+    <p style="font-size:0.85rem;">Limits: the dark time assumes all circuits reconfigure together and carry nothing meanwhile; real systems drain traffic first and reconfigure part of the fabric at a time. The power comparison counts only the spine layer, not the aggregation blocks either side, and ignores the cost of circulators and of transceivers that tolerate the OCS's extra loss.</p>
+        <style>@media (max-width: 640px) { .sim-grid .control-row label { min-width: 0; flex-basis: 100%; } .sim-grid .control-row input[type="range"] { min-width: 0; } }</style>
+    <script>
+    (function(){
+        const $ = id => document.getElementById(id);
+        const g = id => +$(id).value;
+        const ids = ['oc-tr', 'oc-per', 'oc-n', 'oc-eps', 'oc-xcvr', 'oc-ocs', 'oc-il'];
+        // reconfiguration time (log10 seconds) for each technology preset
+        const TECH = { mems: Math.log10(0.05), siph: Math.log10(400e-9), laser: Math.log10(3.84e-9) };   // Calient <50 ms per port (vendor); Seok et al. <400 ns; Sirius 3.84 ns
+        const fmtT = s => s >= 1 ? s.toFixed(s >= 10 ? 0 : 1) + ' s' : s >= 1e-3 ? (s * 1e3).toFixed(s >= 1e-2 ? 0 : 1) + ' ms' : s >= 1e-6 ? (s * 1e6).toFixed(s >= 1e-5 ? 0 : 1) + ' µs' : (s * 1e9).toFixed(1) + ' ns';
+        function rec() {
+            const tr = Math.pow(10, g('oc-tr')), per = Math.pow(10, g('oc-per')), n = g('oc-n');
+            const duty = Math.max(0, 1 - tr / per);
+            $('oc-tr-val').textContent = fmtT(tr); $('oc-per-val').textContent = fmtT(per);
+            ['oc-n', 'oc-eps', 'oc-xcvr', 'oc-ocs', 'oc-il'].forEach(id => $(id + '-val').textContent = (+$(id).value).toFixed(id === 'oc-il' ? 1 : id === 'oc-n' ? 0 : 1));
+            // a spine layer of n ports: packet switching terminates every link in a transceiver at the spine and burns switch power per port;
+            // an optical circuit switch passes light through, so the spine-side transceivers and switch ports disappear
+            const epsW = n * (g('oc-eps') + g('oc-xcvr')), ocsW = n * g('oc-ocs');
+            $('oc-duty').textContent = (100 * duty).toFixed(duty > 0.999 ? 3 : 1) + '%';
+            $('oc-lost').textContent = fmtT(Math.min(tr, per)) + ' per ' + fmtT(per);
+            $('oc-epsw').textContent = (epsW / 1e3).toFixed(1) + ' kW';
+            $('oc-ocsw').textContent = (ocsW / 1e3).toFixed(2) + ' kW';
+            $('oc-save').textContent = (100 * (1 - ocsW / epsW)).toFixed(0) + '%';
+            $('oc-budget').textContent = '+' + g('oc-il').toFixed(1) + ' dB';
+            $('oc-note').innerHTML = 'Reconfiguring every ' + fmtT(per) + ' with a ' + fmtT(tr) + ' switch leaves the fabric carrying traffic ' + (100 * duty).toFixed(1) + '% of the time' +
+                (duty < 0.9 ? ': <strong>too slow for this schedule</strong>; either reconfigure less often or use a faster switch.' : duty > 0.999 ? ': reconfiguration is negligible at this period.' : '.') +
+                ' Replacing a ' + n + '-port packet spine removes ' + ((epsW - ocsW) / 1e3).toFixed(1) + ' kW, and adds ' + g('oc-il').toFixed(1) + ' dB to every link that crosses it (charged in the <a href="https://brendanjameslynskey.github.io/OptSiP_03_Lasers_and_Energy_per_Bit/#slide-09">link budget</a>).';
+            window.ocState = { duty, epsW, ocsW, save: 1 - ocsW / epsW };
+        }
+        $('oc-tech').addEventListener('input', () => { $('oc-tr').value = TECH[$('oc-tech').value]; rec(); });
+        ids.forEach(id => $(id).addEventListener('input', rec));
+        window.ocDemo = { set(o) { for (const [k, v] of Object.entries(o)) { $(k).value = v; if (k === 'oc-tech') $('oc-tr').value = TECH[v]; } rec(); return window.ocState; } };
+        rec();
+    })();
+    </script>
+</section>
+
+<section class="slide" id="slide-08">
+    <div class="slide-number">08</div>
+    <h2>Reconfiguration Time Against Traffic</h2>
+    <div class="ladder">
+        <div class="ladder-row"><span class="rung">Slowest: physical rewiring</span><span>Robotic patch panels: rewire when the network is rebuilt or expanded</span><span class="speed">per build</span></div>
+        <div class="ladder-row"><span class="rung">Milliseconds</span><span>3D MEMS: per job, per failure, per traffic-matrix change (Jupiter, TPU v4)</span><span class="speed">per job</span></div>
+        <div class="ladder-row"><span class="rung">Microseconds to sub-microsecond</span><span>Integrated switches, rotor switches: schedules of circuits that cycle through matchings</span><span class="speed">per schedule</span></div>
+        <div class="ladder-row"><span class="rung">Nanoseconds</span><span>Tunable lasers and gratings: switch per time slot, close to packet granularity</span><span class="speed">per slot</span></div>
+    </div>
+    <ul>
+        <li><strong>Hybrid designs</strong> added an OCS beside a packet network to carry large, stable flows: Helios (Farrington et al., <a href="https://doi.org/10.1145/1851182.1851223">ACM SIGCOMM 2010</a>) and c-Through (Wang et al., ACM SIGCOMM 2010).</li>
+        <li><strong>RotorNet</strong> makes switching traffic-independent: rotor switches cycle through a fixed set of matchings, so no central scheduler is needed, with switches that scale to thousands of ports (Mellette et al., <a href="https://doi.org/10.1145/3098822.3098838">ACM SIGCOMM 2017</a>).</li>
+        <li><strong>Sirius</strong> goes to nanoseconds: tunable lasers with passive gratings, reconfiguring end to end in 3.84 ns on 50 Gb/s channels, with up to 74&ndash;77% lower power than an electrical network in simulation (Ballani et al., <a href="https://doi.org/10.1145/3387514.3406221">ACM SIGCOMM 2020</a>).</li>
+        <li><strong>The rule</strong>, which the interactive makes concrete: the switch's reconfiguration time must be small against how long a configuration is used. MEMS suits topologies that change per job; per-packet switching needs nanoseconds.</li>
+    </ul>
+</section>
+
+<section class="slide" id="slide-09">
+    <div class="slide-number">09</div>
+    <h2>An Optical Switch in the Link Budget</h2>
+    <ul>
+        <li><strong>Every OCS adds its insertion loss to every link through it:</strong> typically under 2 dB for Palomar, 1.8 dB typical for Calient's S320, up to 9.8 dB on chip for Seok et al.'s silicon switch (<a href="#slide-03">slide 03</a>). The transceivers must be specified to tolerate it, and every extra decibel is paid in laser power at the wall (<a href="https://brendanjameslynskey.github.io/Optical_Hub_Silicon_Photonics/#g-linkbudget">optical link budget</a>; try it in the <a href="https://brendanjameslynskey.github.io/OptSiP_03_Lasers_and_Energy_per_Bit/#slide-09">OptSiP 03 interactive</a>).</li>
+        <li><strong>Return loss</strong> matters on bidirectional circulator links (<a href="#slide-05">slide 05</a>), and connectors either side of the switch add their own loss and reflections.</li>
+        <li><strong>The light must survive without regeneration:</strong> an OCS has no receiver to clean the signal up, so several in series, or a lossy integrated switch, quickly use up a short-reach module's margin. This favours low-loss free-space switches in the spine, and single stages.</li>
+        <li><strong>Wavelength and polarisation:</strong> MEMS mirrors reflect all wavelengths alike, so WDM transceivers pass through unchanged; integrated switches can be wavelength- and polarisation-dependent (<a href="https://brendanjameslynskey.github.io/OptSiP_01_Waveguides_and_WDM/#slide-03">OptSiP 01, slide 03</a>).</li>
+    </ul>
+</section>
+
+<section class="slide" id="slide-10">
+    <div class="slide-number">10</div>
+    <h2>What Circuit Switching Cannot Do</h2>
+    <ul>
+        <li><strong>No per-packet decisions and no buffering.</strong> An OCS cannot absorb bursts or mix many small flows onto one port; that still needs packet switches at the edges, and a topology whose circuits match the traffic.</li>
+        <li><strong>It needs a control plane that knows the traffic.</strong> Topology engineering (Jupiter) or per-job slicing (TPU v4) works because traffic is predictable over the switch's reconfiguration time. Unpredictable all-to-all traffic, such as mixture-of-experts dispatch, suits a full packet fabric better (<a href="https://brendanjameslynskey.github.io/LLM_Hub_Compute_in_Transit/#g-alltoall">MoE all-to-all</a>).</li>
+        <li><strong>Reconfiguring drops traffic</strong> on the circuits that move, so it must be drained first: the dark time of the interactive.</li>
+        <li><strong>Mechanical parts</strong> in MEMS and robotic switches raise reliability questions that solid-state switches do not; the published systems report gains in availability, because routing around failures outweighs the switch's own failure rate (<a href="#slide-06">slide 06</a>).</li>
+    </ul>
+</section>
+
+<section class="slide" id="slide-11">
+    <div class="slide-number">11</div>
+    <h2>What to Take Away</h2>
+    <ul>
+        <li><strong>An OCS steers light without detecting it:</strong> no transceivers inside, under 1 W per port (Palomar: 108 W for 136 ports), and agnostic to line rate, so it survives optics upgrades.</li>
+        <li><strong>Technologies trade speed for loss and scale:</strong> MEMS gives hundreds of ports at under 2 dB in milliseconds; silicon photonic switches reach under 400 ns at several dB; tunable lasers switch in nanoseconds.</li>
+        <li><strong>Google's evidence:</strong> an OCS spine gave 30% lower capital cost and 41% lower power (Jupiter); in TPU v4 the OCSes cost under 5% of the system and under 3% of its power while slicing the machine and routing around failures.</li>
+        <li><strong>The rule:</strong> reconfiguration time must be small against how long a topology is used; milliseconds suit per-job topologies, not per-packet switching.</li>
+        <li><strong>Every OCS adds loss</strong> to every link through it, paid for in the transceivers' budget.</li>
+        <li><strong>Next:</strong> <a href="https://brendanjameslynskey.github.io/OptDC_04_AI_Cluster_Networks/">deck 04</a> puts pluggables, CPO and OCS into the networks of AI clusters.</li>
+    </ul>
+</section>
+
+<!-- ════════════════════════════════════ Footer ════════════════════════════════════ -->
+<footer class="footer">
+    <p>Part of the <a href="https://github.com/BrendanJamesLynskey/Optical_Hub_Data_Centres">Optical Technology for Data Centres series</a> &middot; <a href="https://brendanjameslynskey.github.io/Optical_Hub_Data_Centres/#glossary">glossary: every concept and where it is explained</a> &middot; numbers: cited on each slide or computed live in the interactive</p>
+    <p style="margin-top: 0.5rem; font-size: 0.8rem;"><a href="https://brendanjameslynskey.github.io/OptDC_02_Co_Packaged_Optics/">&larr; 02 Co-Packaged Optics and Optical I/O</a> &nbsp;&middot;&nbsp; <a href="https://brendanjameslynskey.github.io/OptDC_04_AI_Cluster_Networks/">04 Optical Networks for AI Clusters &rarr;</a></p>
+    <p style="margin-top: 0.5rem; font-size: 0.8rem;">Sister series: <a href="https://brendanjameslynskey.github.io/Optical_Hub_Silicon_Photonics/">Silicon Photonics Fundamentals</a> (the device physics) &middot; <a href="https://github.com/BrendanJamesLynskey/Optical_Hub_AI_Processing">Optical Technology for AI Processing</a> (planned) &middot; <a href="https://brendanjameslynskey.github.io/LLM_Hub_Compute_in_Transit/">Compute in Transit</a> &middot; <a href="https://brendanjameslynskey.github.io/LLM_Hub_Fourier_Optics_Training/">Fourier Optics for Training</a> &middot; <a href="https://brendanjameslynskey.github.io/LLM_Hub_Inference_Simulators/">LLM Inference Simulators</a></p>
+</footer>
+
+<script>
+    // Smooth scroll for TOC links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    });
+
+    // Subtle fade-in on scroll
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.slide').forEach(slide => {
+        slide.style.opacity = '0';
+        slide.style.transform = 'translateY(30px)';
+        slide.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(slide);
+    });
+</script>
+
+</body>
+</html>
